@@ -13,7 +13,10 @@ await connectDB();
 
 
 app.get('/' , (req,res) => res.send("server is running") );
-app.use('/api/inngest', serve({ client: inngest, functions }));
+app.use(
+  "/api/inngest",
+  serve({ client: inngest, functions, verifySignature: false })
+);
 
 const PORT = process.env.PORT || 4000;
 

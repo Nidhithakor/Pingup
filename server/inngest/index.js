@@ -1,36 +1,36 @@
 import { Inngest } from "inngest";
-import User from "../models/User.js"
+import User from "../models/User.js";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "pingup-app" });
 
 //Inggest function to save user data to a database
 const syncUserCreation = inngest.createFunction(
-    {id : 'sync-user-from-clerk'},
-    {event : 'clerk/user.created'},
-    async (event) => {
-        const {id, first_name, last_name, email_addresses, image_url} = event.data
-        let username = email_addresses[0].email_addresses.split('@')[0]
+  { id: "sync-user-from-clerk" },
+  { event: "clerk/user.created" },
+  async (event) => {
+    const { id, first_name, last_name, email_addresses, image_url } =
+      event.data;
+    let username = email_addresses[0].email_addresses.split("@")[0];
 
-        // check availibility of the username
-        const user = await User.findOne({username})
+    // check availibility of the username
+    const user = await User.findOne({ username });
 
-        if(user) {
-            username = username + Math.floor(Math.rendom() * 1000)
-        }
-
-        const userData = {
-            _id : id,
-            email : email_addresses[0].email_addresses,
-            full_name : first_name + " " + last_name,
-            profile_picture : image_url,
-            username 
-        }
-
-
-        await User.create(userData)
+    if (user) {
+      username = username + Math.floor(Math.random() * 1000);
     }
-)
+
+    const userData = {
+      _id: id,
+      email: email_addresses[0].email_addresses,
+      full_name: first_name + " " + last_name,
+      profile_picture: image_url,
+      username,
+    };
+
+    await User.create(userData);
+  }
+);
 
 // Inngest function to update user data in database
 const syncUserUpdation = inngest.createFunction(
@@ -39,19 +39,16 @@ const syncUserUpdation = inngest.createFunction(
   async (event) => {
     const { id, first_name, last_name, email_addresses, image_url } =
       event.data;
-    
-   const updateUserData = {
-    email : email_addresses[0].email_addresses,
-    full_name : first_name + ' ' + last_name,
-    profile_picture : image_url
-   }
 
-   await User.findByIdAndUpdate(id, updateUserData)
-   
+    const updateUserData = {
+      email: email_addresses[0].email_addresses,
+      full_name: first_name + " " + last_name,
+      profile_picture: image_url,
+    };
 
+    await User.findByIdAndUpdate(id, updateUserData);
   }
 );
-
 
 // inggest function to delete user in database
 const syncUserDeletion = inngest.createFunction(
