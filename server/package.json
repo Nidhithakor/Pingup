@@ -4,8 +4,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "server": "nodemon index.js",
-    "start": "nodemon index.js"
+    "server": "node index.js",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
