@@ -4,8 +4,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "server": "node index.js",
-    "start": "node index.js"
+    "server": "node server.js",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
